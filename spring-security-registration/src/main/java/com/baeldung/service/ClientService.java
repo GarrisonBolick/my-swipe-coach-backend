@@ -79,6 +79,10 @@ public class ClientService {
 	public Optional<Client> getClient(Integer id) {
 		return clientRepository.findById(id);
 	}
+	
+	public Optional<Client> getClientByUserId(Long userId) {
+		return clientRepository.findByUserId(userId);
+	}
 
 	
 	// Delete a Job Type

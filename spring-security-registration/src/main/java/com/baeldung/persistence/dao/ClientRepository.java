@@ -8,6 +8,7 @@ package com.baeldung.persistence.dao;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -22,6 +23,9 @@ import com.baeldung.persistence.model.Client;
  */
 
 public interface ClientRepository extends CrudRepository<Client, Integer>{
+	
+	//@Query(value= "Select * from client Join", nativeQuery=true)
+	Optional<Client> findByUserId(Long userId);
 
 	
  //@Query(value= "Select * from client", nativeQuery=true)

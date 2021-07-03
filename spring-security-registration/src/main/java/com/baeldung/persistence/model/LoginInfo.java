@@ -7,9 +7,12 @@ public class LoginInfo {
 public String email;
 public String password;
 public LoginInfo(String email, String password) {
-	super();
+	
 	this.email = email;
 	this.password = password;
+}
+public LoginInfo() {
+	
 }
 public String getEmail() {
 	return email;

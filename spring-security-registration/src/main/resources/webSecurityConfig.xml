@@ -8,7 +8,7 @@
 >
 
     <http use-expressions="true">
-        <intercept-url pattern="/login*" access="permitAll"/>
+        <intercept-url pattern="/user/login*" access="permitAll"/>
         <intercept-url pattern="/logout*" access="permitAll"/>
         <intercept-url pattern="/signin/**" access="permitAll"/>
         <intercept-url pattern="/signup/**" access="permitAll"/>
@@ -31,14 +31,14 @@
         
         <csrf disabled="true"/>
         
-        <form-login login-page='/login'
+        <form-login login-page='/user/login'
             authentication-success-handler-ref="myAuthenticationSuccessHandler"
             authentication-failure-handler-ref="authenticationFailureHandler"
             default-target-url="/homepage"/>
             
         <session-management invalid-session-url="/invalidSession" session-fixation-protection="none">
         	<concurrency-control max-sessions="1" error-if-maximum-exceeded="true" 
-        	expired-url="/login" session-registry-alias="sessionRegistry"/>
+        	expired-url="/user/login" session-registry-alias="sessionRegistry"/>
         </session-management>
         
         <logout invalidate-session="false" logout-success-url="/logoutPage?logSucc=true" delete-cookies="JSESSIONID"/>

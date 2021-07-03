@@ -1,5 +1,6 @@
 package com.baeldung.web.controller;
 
+import com.baeldung.persistence.model.Client;
 import com.baeldung.persistence.model.LoginInfo;
 import com.baeldung.persistence.model.User;
 import com.baeldung.persistence.model.VerificationToken;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,8 +40,7 @@ public class RegistrationRestController {
     @Autowired
     private IUserService userService;
     
-    @Autowired
-    private LoginInfo loginInfo;
+ 
    
     @Autowired
     private ClientService clientService;
@@ -78,11 +80,21 @@ public class RegistrationRestController {
         return new GenericResponse("success");
     }
 @GetMapping("/user/login")
-public GenericResponse loginUser(@RequestBody LoginInfo loginInfo) {
-	return null;
+public @ResponseBody ResponseEntity loginUser(@RequestBody LoginInfo loginInfo) {
+
+	User user = userService.findUserByEmail(loginInfo.email);	
+	if(	passwordEncoder.matches(loginInfo.password, user.getPassword())) {
+		Optional<Client> userClientProfile = clientService.getClientByUserId(user.getId());
+		return new ResponseEntity<>(userClientProfile, HttpStatus.OK);
+	}
+	else {
+		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+	}
+	
 }
     // User activation - verification
     @GetMapping("/user/resendRegistrationToken")
+    
     public GenericResponse resendRegistrationToken(final HttpServletRequest request, @RequestParam("token") final String existingToken) {
         final VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
         final User user = userService.getUser(newToken.getToken());

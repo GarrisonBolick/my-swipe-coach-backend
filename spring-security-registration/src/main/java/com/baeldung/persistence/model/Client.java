@@ -50,7 +50,7 @@ public Client(){
 	this.Email = email;
 	this.ContactNumber = contactNumber;
 	this.PaidFlag = paidFlag;
-	this.UserId = userId;
+	this.userId = userId;
 }
     
     @Column(name="QuizAnswerId")
@@ -69,8 +69,8 @@ public Client(){
     private String ContactNumber;
     @Column(name="PaidFlag")
     private String PaidFlag;
-    @Column(name="UserId")
-    private Long UserId;
+    @Column(name="User_id")
+    private Long userId;
 
 
 
@@ -78,7 +78,7 @@ public Client(){
 
 
 	public Long getUserId() {
-		return UserId;
+		return userId;
 	}
 
 
@@ -88,7 +88,7 @@ public Client(){
 
 
 	public void setUserId(Long userId) {
-		UserId = userId;
+		userId = userId;
 	}
 
 
