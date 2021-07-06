@@ -1,17 +1,17 @@
-package com.baeldung.persistence.model;
+package com.baeldung.web.dto;
 
 
 
 
-public class LoginInfo {
+public class LoginInfoDto {
 public String email;
 public String password;
-public LoginInfo(String email, String password) {
+public LoginInfoDto(String email, String password) {
 	
 	this.email = email;
 	this.password = password;
 }
-public LoginInfo() {
+public LoginInfoDto() {
 	
 }
 public String getEmail() {

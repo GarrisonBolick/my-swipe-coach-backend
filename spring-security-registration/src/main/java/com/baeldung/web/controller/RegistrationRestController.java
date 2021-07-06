@@ -1,13 +1,16 @@
 package com.baeldung.web.controller;
 
 import com.baeldung.persistence.model.Client;
-import com.baeldung.persistence.model.LoginInfo;
 import com.baeldung.persistence.model.User;
 import com.baeldung.persistence.model.VerificationToken;
 import com.baeldung.registration.OnRegistrationCompleteEvent;
+import com.baeldung.security.ActiveUserStore;
 import com.baeldung.security.ISecurityUserService;
+import com.baeldung.security.LoggedUser;
 import com.baeldung.service.ClientService;
 import com.baeldung.service.IUserService;
+import com.baeldung.web.dto.ClientDto;
+import com.baeldung.web.dto.LoginInfoDto;
 import com.baeldung.web.dto.PasswordDto;
 import com.baeldung.web.dto.UserDto;
 import com.baeldung.web.error.InvalidOldPasswordException;
@@ -29,10 +32,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 public class RegistrationRestController {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
@@ -46,6 +51,9 @@ public class RegistrationRestController {
     private ClientService clientService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private ActiveUserStore activeUserStore;
 
 
     @Autowired
@@ -69,7 +77,7 @@ public class RegistrationRestController {
 
     // Registration
     @PostMapping("/user/registration")
-    public GenericResponse registerUserAccount(@Valid final UserDto accountDto, final HttpServletRequest request) {
+    public ResponseEntity registerUserAccount(  @RequestBody final UserDto accountDto, final HttpServletRequest request) {
         LOGGER.debug("Registering user account with information: {}", accountDto);
         
         final User registered = userService.registerNewUserAccount(accountDto);
@@ -77,21 +85,42 @@ public class RegistrationRestController {
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
       
         clientService.createEmptyClient(registered.getId());
-        return new GenericResponse("success");
+        
+        return new ResponseEntity<>(userService.getVerificationTokenByUser(registered), HttpStatus.OK);
     }
-@GetMapping("/user/login")
-public @ResponseBody ResponseEntity loginUser(@RequestBody LoginInfo loginInfo) {
-
-	User user = userService.findUserByEmail(loginInfo.email);	
-	if(	passwordEncoder.matches(loginInfo.password, user.getPassword())) {
-		Optional<Client> userClientProfile = clientService.getClientByUserId(user.getId());
-		return new ResponseEntity<>(userClientProfile, HttpStatus.OK);
-	}
-	else {
-		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-	}
+//    @GetMapping("/user/login")
+//    public @ResponseBody ResponseEntity loginUserGet(@RequestBody LoginInfo loginInfo) {
+//
+//    	User user = userService.findUserByEmail(loginInfo.email);	
+//    	if(	passwordEncoder.matches(loginInfo.password, user.getPassword())) {
+//    		Optional<Client> userClientProfile = clientService.getClientByUserId(user.getId());
+//    		return new ResponseEntity<>(userClientProfile, HttpStatus.OK);
+//    	}
+//    	else {
+//    		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//    	}
+//    }
+	@PostMapping("/user/login")
+	public @ResponseBody ResponseEntity loginUser(@RequestBody LoginInfoDto loginInfo) {
 	
-}
+		Optional<User> user = Optional.of(userService.findUserByEmail(loginInfo.email));
+		
+		if(user.isPresent() && passwordEncoder.matches(loginInfo.password, user.get().getPassword())) {
+			Optional<Client> userClientProfile = clientService.getClientByUserId(user.get().getId());
+			if (userClientProfile.isPresent()) {
+				ClientDto clientDto = new ClientDto(userClientProfile.get());
+				clientDto.setToken(userService.getVerificationTokenByUser(user.get()).getToken());
+				
+				List<String> loggedUsers = activeUserStore.getUsers();
+				loggedUsers.add(clientDto.getEmail());
+				activeUserStore.users = loggedUsers;
+				return new ResponseEntity<>(clientDto, HttpStatus.OK);
+			}
+		}
+		
+		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		
+	}
     // User activation - verification
     @GetMapping("/user/resendRegistrationToken")
     

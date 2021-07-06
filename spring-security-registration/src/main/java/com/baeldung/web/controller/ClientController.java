@@ -20,12 +20,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.baeldung.persistence.model.Client;
+import com.baeldung.persistence.model.User;
 import com.baeldung.service.ClientService;
 import com.baeldung.service.PotentialMatchService;
+import com.baeldung.service.UserService;
+import com.baeldung.web.dto.ClientDto;
 
-@Controller
+@RestController
 @RequestMapping(path="/client")
 @CrossOrigin
 public class ClientController {
@@ -34,6 +38,9 @@ public class ClientController {
 	private ClientService clientService;
 	@Autowired
 	private PotentialMatchService potentialMatchService;
+	
+	@Autowired
+	private UserService userService;
 
 	// Add new job type
 	@PostMapping(path="/add")
@@ -66,8 +73,15 @@ public class ClientController {
 	// Update a Job Type
 	@PostMapping(path="/update")
 	public @ResponseBody ResponseEntity<Object> updateClient(@RequestBody 
-        Client a) {
-		return clientService.updateClient(a);
+        ClientDto a) {
+		User user = userService.getUser(a.token);
+		Optional<Client> client = clientService.getClientByUserId(user.getId());
+		
+		if (client.isPresent()) {
+			client.get().update(a);
+		}
+		
+		return clientService.updateClient(client.get());
 	}
 	
 	

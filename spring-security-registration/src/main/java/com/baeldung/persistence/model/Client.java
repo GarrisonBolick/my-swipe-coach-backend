@@ -17,6 +17,8 @@ import javax.persistence.Id;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
+import com.baeldung.web.dto.ClientDto;
+
 /**
  *
  * @author kolby
@@ -36,7 +38,15 @@ public Client(){
      
    
 
-
+	public Client(ClientDto clientDto) {
+		
+		this.FirstName = clientDto.getFirstName();
+		this.LastName = clientDto.getLastName();
+		this.DateOfBirth = clientDto.getDateOfBirth();
+		this.Email = clientDto.getEmail();
+		this.ContactNumber = clientDto.getContactNumber();
+		
+	}
 	
     public Client(Integer clientAutoId, Integer quizAnswerId, Integer infoId, String firstName, String lastName, Date dateOfBirth,
 		String email, String contactNumber, String paidFlag,Long userId) {
@@ -52,6 +62,15 @@ public Client(){
 	this.PaidFlag = paidFlag;
 	this.userId = userId;
 }
+    
+    public void update(ClientDto clientDto) {
+		
+		this.FirstName = clientDto.getFirstName();
+		this.LastName = clientDto.getLastName();
+		this.DateOfBirth = clientDto.getDateOfBirth();
+		this.Email = clientDto.getEmail();
+		this.ContactNumber = clientDto.getContactNumber();
+    }
     
     @Column(name="QuizAnswerId")
     private Integer QuizAnswerId; 

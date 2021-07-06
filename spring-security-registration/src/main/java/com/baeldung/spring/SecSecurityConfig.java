@@ -86,39 +86,42 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         // @formatter:off
-        http
-            .csrf().disable()
-            .authorizeRequests()
-                .antMatchers( "/user/login*","/logout*", "/signin/**", "/signup/**", "/customLogin",
-                        "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
-                        "/badUser*","/register*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*","/user/savePassword*","/updatePassword*",
-                        "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*","/user/enableNewLoc*").permitAll()
-                .antMatchers("/invalidSession*").anonymous()
-                .antMatchers("/user/updatePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
-                .anyRequest().hasAuthority("READ_PRIVILEGE")
-                .and()
-            .formLogin()
-                .loginPage("/user/login")
-                .defaultSuccessUrl("/homepage.html")
-                .failureUrl("/login?error=true")
-                .successHandler(myAuthenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler)
-                .authenticationDetailsSource(authenticationDetailsSource)
-            .permitAll()
-                .and()
-            .sessionManagement()
-                .invalidSessionUrl("/invalidSession.html")
-                .maximumSessions(1).sessionRegistry(sessionRegistry()).and()
-                .sessionFixation().none()
-            .and()
-            .logout()
-                .logoutSuccessHandler(myLogoutSuccessHandler)
-                .invalidateHttpSession(false)
-                .logoutSuccessUrl("/logout.html?logSucc=true")
-                .deleteCookies("JSESSIONID")
-                .permitAll()
-             .and()
-                .rememberMe().rememberMeServices(rememberMeServices()).key("theKey");
+
+   http.csrf().disable();
+   // http
+//            .csrf().disable()
+//            .authorizeRequests()
+//                .antMatchers( "client/update", "/user/login","/logout*", "/signin/**", "/signup/**", "/customLogin",
+//                        "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
+//                        "/badUser*","/register*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*","/user/savePassword*","/updatePassword*",
+//                        "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*","/user/enableNewLoc*").permitAll()
+//                .antMatchers("/invalidSession*").anonymous()
+//                .antMatchers("/user/updatePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
+//               // .antMatchers(HttpMethod.POST, "/user/login").permitAll()
+//                .anyRequest().hasAuthority("WRITE_PRIVILEGE")
+//               
+//                .and()
+//            .formLogin()
+//            	.loginPage("/user/login")
+//                .failureUrl("/login?error=true")
+//                .successHandler(myAuthenticationSuccessHandler)
+//                .failureHandler(authenticationFailureHandler)
+//                .authenticationDetailsSource(authenticationDetailsSource)
+//            .permitAll()
+//                .and()
+//            .sessionManagement()
+//                .invalidSessionUrl("/invalidSession.html")
+//                .maximumSessions(1).sessionRegistry(sessionRegistry()).and()
+//                .sessionFixation().none()
+//            .and()
+//            .logout()
+//                .logoutSuccessHandler(myLogoutSuccessHandler)
+//                .invalidateHttpSession(false)
+//                .logoutSuccessUrl("/logout.html?logSucc=true")
+//                .deleteCookies("JSESSIONID")
+//                .permitAll()
+//             .and()
+//                .rememberMe().rememberMeServices(rememberMeServices()).key("theKey");
 
     // @formatter:on
     }

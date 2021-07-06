@@ -110,6 +110,11 @@ public class UserService implements IUserService {
     public VerificationToken getVerificationToken(final String VerificationToken) {
         return tokenRepository.findByToken(VerificationToken);
     }
+    
+    @Override
+    public VerificationToken getVerificationTokenByUser(final User user) {
+    	return tokenRepository.findByUser(user);
+    }
 
     @Override
     public void saveRegisteredUser(final User user) {
