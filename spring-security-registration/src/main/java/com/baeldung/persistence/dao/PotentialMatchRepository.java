@@ -6,6 +6,7 @@
 package com.baeldung.persistence.dao;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,9 +28,9 @@ public interface PotentialMatchRepository extends CrudRepository<PotentialMatch,
 	
  //@Query(value= "Select * from client", nativeQuery=true)
 // public List<Client> getAll();
- @Query(value ="Select CoachId from potential_matches C\r\n"
- 		+ "Where ClientSwiped =0 and CoachSwiped !=-1 ClientId = :id\r\n", nativeQuery = true)
- public List<Integer> getAllPotentialClientMatch(@Param("id") Integer id);
+ @Query(value ="Select clientId from potential_matches C\r\n"
+ 		+ "Where ClientSwiped =0 and CoachSwiped !=-1 and ClientId = :id\r\n", nativeQuery = true)
+ public ArrayList<Integer> getAllPotentialClientMatch(@Param("id") Integer id);
  
  @Query(value ="Select ClientId from potential_matches C\r\n"
 	 		+ "Where CoachSwiped =0 and ClientSwiped !=-1 ClientId = :id\r\n", nativeQuery = true)

@@ -28,8 +28,8 @@ import com.baeldung.web.dto.ClientDto;
 public class Client {
      @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-     @Column(name="ClientAutoId")
-    private Integer ClientAutoId;
+  
+    private Integer clientAutoId;
 public Client(){
     
 }
@@ -40,57 +40,195 @@ public Client(){
 
 	public Client(ClientDto clientDto) {
 		
-		this.FirstName = clientDto.getFirstName();
-		this.LastName = clientDto.getLastName();
-		this.DateOfBirth = clientDto.getDateOfBirth();
-		this.Email = clientDto.getEmail();
-		this.ContactNumber = clientDto.getContactNumber();
+		this.firstName = clientDto.getFirstName();
+		this.lastName = clientDto.getLastName();
+		this.dateOfBirth = clientDto.getDateOfBirth();
+		this.email = clientDto.getEmail();
+		this.contactNumber = clientDto.getContactNumber();
 		
 	}
 	
     public Client(Integer clientAutoId, Integer quizAnswerId, Integer infoId, String firstName, String lastName, Date dateOfBirth,
 		String email, String contactNumber, String paidFlag,Long userId) {
 	
-	this.ClientAutoId = clientAutoId;
-	this.QuizAnswerId = quizAnswerId;
-	this.InfoId = infoId;
-	this.FirstName = firstName;
-	this.LastName = lastName;
-	this.DateOfBirth = dateOfBirth;
-	this.Email = email;
-	this.ContactNumber = contactNumber;
-	this.PaidFlag = paidFlag;
+	this.clientAutoId = clientAutoId;
+	this.quizAnswerId = quizAnswerId;
+	this.infoId = infoId;
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.dateOfBirth = dateOfBirth;
+	this.email = email;
+	this.contactNumber = contactNumber;
+	this.paidFlag = paidFlag;
 	this.userId = userId;
 }
     
     public void update(ClientDto clientDto) {
 		
-		this.FirstName = clientDto.getFirstName();
-		this.LastName = clientDto.getLastName();
-		this.DateOfBirth = clientDto.getDateOfBirth();
-		this.Email = clientDto.getEmail();
-		this.ContactNumber = clientDto.getContactNumber();
+		this.firstName = clientDto.getFirstName();
+		this.lastName = clientDto.getLastName();
+		this.dateOfBirth = clientDto.getDateOfBirth();
+		this.email = clientDto.getEmail();
+		this.contactNumber = clientDto.getContactNumber();
     }
     
-    @Column(name="QuizAnswerId")
-    private Integer QuizAnswerId; 
-    @Column(name="InfoId")
-    private Integer InfoId;
-    @Column(name="FirstName")
-    private String FirstName; 
-    @Column(name="LastName")
-    private String LastName;
-    @Column(name="DateOfBirth")
-    private Date DateOfBirth;
-    @Column(name="Email")
-    private String Email;
-    @Column(name="ContactNumber")
-    private String ContactNumber;
-    @Column(name="PaidFlag")
-    private String PaidFlag;
-    @Column(name="User_id")
-    private Long userId;
+  
+    private Integer quizAnswerId; 
 
+    private Integer infoId;
+   
+    private String firstName; 
+   
+    private String lastName;
+
+    private Date dateOfBirth;
+   
+    private String email;
+
+    private String contactNumber;
+ 
+    private String paidFlag;
+   
+    private Long userId;
+	public Integer getClientAutoId() {
+		return clientAutoId;
+	}
+
+
+
+
+
+	public void setClientAutoId(Integer clientAutoId) {
+		this.clientAutoId = clientAutoId;
+	}
+
+
+
+
+
+	public Integer getQuizAnswerId() {
+		return quizAnswerId;
+	}
+
+
+
+
+
+	public void setQuizAnswerId(Integer quizAnswerId) {
+		this.quizAnswerId = quizAnswerId;
+	}
+
+
+
+
+
+	public Integer getInfoId() {
+		return infoId;
+	}
+
+
+
+
+
+	public void setInfoId(Integer infoId) {
+		this.infoId = infoId;
+	}
+
+
+
+
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+
+
+
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+
+
+
+
+	public String getLastName() {
+		return lastName;
+	}
+
+
+
+
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+
+
+
+
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+
+
+
+
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
+
+
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+
+
+
+	public String getContactNumber() {
+		return contactNumber;
+	}
+
+
+
+
+
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
+	}
+
+
+
+
+
+	public String getPaidFlag() {
+		return paidFlag;
+	}
+
+
+
+
+
+	public void setPaidFlag(String paidFlag) {
+		this.paidFlag = paidFlag;
+	}
 
 
 
@@ -104,192 +242,9 @@ public Client(){
 
 
 
-
-
 	public void setUserId(Long userId) {
-		userId = userId;
+		this.userId = userId;
 	}
-
-
-
-
-
-
-
-	public Integer getId() {
-		return ClientAutoId;
-	}
-
-
-
-
-
-
-
-	public void setId(Integer id) {
-		this.ClientAutoId = id;
-	}
-
-
-
-
-
-
-
-	public Integer getQuizAnswerId() {
-		return QuizAnswerId;
-	}
-
-
-
-
-
-
-
-	public void setQuizAnswerId(Integer quizAnswerId) {
-		QuizAnswerId = quizAnswerId;
-	}
-
-
-
-
-
-
-
-	public Integer getInfoId() {
-		return InfoId;
-	}
-
-
-
-
-
-
-
-	public void setInfoId(Integer infoId) {
-		InfoId = infoId;
-	}
-
-
-
-
-
-
-
-	public String getFirstName() {
-		return FirstName;
-	}
-
-
-
-
-
-
-
-	public void setFirstName(String firstName) {
-		FirstName = firstName;
-	}
-
-
-
-
-
-
-
-	public String getLastName() {
-		return LastName;
-	}
-
-
-
-
-
-
-
-	public void setLastName(String lastName) {
-		LastName = lastName;
-	}
-
-
-
-
-
-
-
-	public Date getDateOfBirth() {
-		return DateOfBirth;
-	}
-
-
-
-
-
-
-
-	public void setDateOfBirth(Date dateOfBirth) {
-		DateOfBirth = dateOfBirth;
-	}
-
-
-
-
-
-
-
-	public String getEmail() {
-		return Email;
-	}
-
-
-
-
-
-
-
-	public void setEmail(String email) {
-		Email = email;
-	}
-
-
-
-
-
-
-
-	public String getContactNumber() {
-		return ContactNumber;
-	}
-
-
-
-
-
-
-
-	public void setContactNumber(String contactNumber) {
-		ContactNumber = contactNumber;
-	}
-
-
-
-
-
-
-
-	public String getPaidFlag() {
-		return PaidFlag;
-	}
-
-
-
-
-
-
-
-	public void setPaidFlag(String paidFlag) {
-		PaidFlag = paidFlag;
-	}
-
 
 
 

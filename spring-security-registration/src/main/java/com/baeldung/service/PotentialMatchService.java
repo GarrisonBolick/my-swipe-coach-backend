@@ -9,6 +9,7 @@ import com.baeldung.persistence.dao.ClientRepository;
 import com.baeldung.persistence.dao.PotentialMatchRepository;
 import com.baeldung.persistence.model.Client;
 import com.baeldung.persistence.model.PotentialMatch;
+import com.baeldung.web.dto.ClientDto;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,6 +33,8 @@ public class PotentialMatchService {
 	private PotentialMatchRepository PotentialMatchRepository;
 	@Autowired	
 	private ClientRepository clientRepository;
+	@Autowired 
+	private ClientService clientService;
 	
 	// Add new Job Types
 	public String updatePotentialMatch(PotentialMatch pm) {
@@ -43,7 +46,7 @@ public class PotentialMatchService {
 			return "failed";
 		}
 	}
-	
+
 //public String coachInitializeMatch(Integer clientId, Integer clientSwiped ) {
 //		
 //		try {
@@ -79,9 +82,14 @@ public class PotentialMatchService {
 
 
 	// Get all Job Types
-	public  Iterable<Integer> getAllPotentialClientMatch(Integer Id){
-			
-            return PotentialMatchRepository.getAllPotentialClientMatch(Id);
+	public  Iterable<ClientDto> getAllPotentialClientMatch(Integer Id){
+			ArrayList<Integer> clientIds = (ArrayList<Integer>) PotentialMatchRepository.getAllPotentialClientMatch(Id);
+			List<ClientDto> clientProfiles = new ArrayList<ClientDto>();
+		for(int clientId:clientIds){
+			clientProfiles.add(new ClientDto(clientService.getClient(clientId).get()));
+		}
+		
+            return clientProfiles;
 					
 	}
 	// Get all Job Types

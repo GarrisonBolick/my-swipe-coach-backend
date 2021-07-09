@@ -44,7 +44,7 @@ public class ClientService {
         // Update a Job Type
 	public ResponseEntity<Object> updateClient(Client a) {
 		try {
-			Optional<Client> clientOptional = clientRepository.findById(a.getId());
+			Optional<Client> clientOptional = clientRepository.findById(a.getClientAutoId());
 			if(!clientOptional.isPresent()) {
 				return ResponseEntity.notFound().build();
 			}
@@ -83,6 +83,11 @@ public class ClientService {
 	public Optional<Client> getClientByUserId(Long userId) {
 		return clientRepository.findByUserId(userId);
 	}
+	
+	public Optional<Client> getClientByEmail(String email) {
+		return clientRepository.findByEmail(email);
+	}
+
 
 	
 	// Delete a Job Type

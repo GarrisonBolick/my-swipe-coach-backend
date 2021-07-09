@@ -19,10 +19,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.baeldung.persistence.model.Client;
 import com.baeldung.persistence.model.PotentialMatch;
+import com.baeldung.service.ClientService;
 import com.baeldung.service.PotentialMatchService;
+import com.baeldung.web.dto.ClientDto;
 
 @Controller
 @RequestMapping(path="/potentialMatch")
@@ -31,6 +35,8 @@ public class PotentialMatchesController {
 	
 	@Autowired
 	private PotentialMatchService potentialMatchService;
+	@Autowired
+	private ClientService clientService;
 
 	// Add new job type
 	@PostMapping(path="/add/{id}")
@@ -51,10 +57,10 @@ public class PotentialMatchesController {
 	}
 	// Get all job types
 		@GetMapping(path="/ClientMatches")
-		public @ResponseBody ResponseEntity<Iterable<Integer>> getAllPotentialClientMatch(Integer id) {
-	            
-	            Iterable<Integer> allAList;
-	            allAList = potentialMatchService.getAllPotentialClientMatch(id);
+		public @ResponseBody ResponseEntity<Iterable<ClientDto>> getAllPotentialClientMatch(@RequestParam String email) {
+	            Optional<Client> client = clientService.getClientByEmail(email);
+	            Iterable<ClientDto> allAList;
+	            allAList = potentialMatchService.getAllPotentialClientMatch(client.get().getClientAutoId());
 			return new ResponseEntity<>(allAList,
 	                HttpStatus.OK);
 		}

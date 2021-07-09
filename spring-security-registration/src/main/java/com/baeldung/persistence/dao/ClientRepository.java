@@ -27,6 +27,8 @@ public interface ClientRepository extends CrudRepository<Client, Integer>{
 	//@Query(value= "Select * from client Join", nativeQuery=true)
 	Optional<Client> findByUserId(Long userId);
 
+	Optional<Client> findByEmail(String email);
+
 	
  //@Query(value= "Select * from client", nativeQuery=true)
 // public List<Client> getAll();
