@@ -86,7 +86,7 @@ public class RegistrationRestController {
       
         clientService.createEmptyClient(registered.getId());
         
-        return new ResponseEntity<>(userService.getVerificationTokenByUser(registered), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getVerificationTokenByUser(registered).getToken(), HttpStatus.OK);
     }
 //    @GetMapping("/user/login")
 //    public @ResponseBody ResponseEntity loginUserGet(@RequestBody LoginInfo loginInfo) {
