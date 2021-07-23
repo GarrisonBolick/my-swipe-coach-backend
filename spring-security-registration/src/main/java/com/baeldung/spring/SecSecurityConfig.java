@@ -3,6 +3,8 @@ package com.baeldung.spring;
 import java.io.File;
 import java.io.IOException;
 
+import com.baeldung.javainuse.config.JwtAuthenticationEntryPoint;
+import com.baeldung.javainuse.config.JwtRequestFilter;
 import com.baeldung.persistence.dao.UserRepository;
 import com.baeldung.security.CustomRememberMeServices;
 import com.baeldung.security.google2fa.CustomAuthenticationProvider;
@@ -20,6 +22,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,6 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 
@@ -82,49 +86,90 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/resources/**")
             .antMatchers("/h2/**");
     }
+    
 
-    @Override
-    protected void configure(final HttpSecurity http) throws Exception {
-        // @formatter:off
 
-   http.csrf().disable();
-   // http
-//            .csrf().disable()
-//            .authorizeRequests()
-//                .antMatchers( "client/update", "/user/login","/logout*", "/signin/**", "/signup/**", "/customLogin",
-//                        "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
-//                        "/badUser*","/register*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*","/user/savePassword*","/updatePassword*",
-//                        "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*","/user/enableNewLoc*").permitAll()
-//                .antMatchers("/invalidSession*").anonymous()
-//                .antMatchers("/user/updatePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
-//               // .antMatchers(HttpMethod.POST, "/user/login").permitAll()
-//                .anyRequest().hasAuthority("WRITE_PRIVILEGE")
-//               
-//                .and()
-//            .formLogin()
-//            	.loginPage("/user/login")
-//                .failureUrl("/login?error=true")
-//                .successHandler(myAuthenticationSuccessHandler)
-//                .failureHandler(authenticationFailureHandler)
-//                .authenticationDetailsSource(authenticationDetailsSource)
-//            .permitAll()
-//                .and()
-//            .sessionManagement()
-//                .invalidSessionUrl("/invalidSession.html")
-//                .maximumSessions(1).sessionRegistry(sessionRegistry()).and()
-//                .sessionFixation().none()
-//            .and()
-//            .logout()
-//                .logoutSuccessHandler(myLogoutSuccessHandler)
-//                .invalidateHttpSession(false)
-//                .logoutSuccessUrl("/logout.html?logSucc=true")
-//                .deleteCookies("JSESSIONID")
-//                .permitAll()
-//             .and()
-//                .rememberMe().rememberMeServices(rememberMeServices()).key("theKey");
+	@Autowired
+	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    // @formatter:on
-    }
+	@Autowired
+	private UserDetailsService jwtUserDetailsService;
+
+	@Autowired
+	private JwtRequestFilter jwtRequestFilter;
+
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		// configure AuthenticationManager so that it knows from where to load
+		// user for matching credentials
+		// Use BCryptPasswordEncoder
+		auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	@Override
+	protected void configure(HttpSecurity httpSecurity) throws Exception {
+		// We don't need CSRF for this example
+		httpSecurity.csrf().disable()
+				// dont authenticate this particular request
+				.authorizeRequests().antMatchers("/authenticate").permitAll().
+				// all other requests need to be authenticated
+				anyRequest().authenticated().and().
+				// make sure we use stateless session; session won't be used to
+				// store user's state.
+				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+		// Add a filter to validate the tokens with every request
+		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+	}
+
+//    @Override
+//    protected void configure(final HttpSecurity http) throws Exception {
+//        // @formatter:off
+//
+//   http.csrf().disable();
+//   // http
+////            .csrf().disable()
+////            .authorizeRequests()
+////                .antMatchers( "client/update", "/user/login","/logout*", "/signin/**", "/signup/**", "/customLogin",
+////                        "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
+////                        "/badUser*","/register*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*","/user/savePassword*","/updatePassword*",
+////                        "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*","/user/enableNewLoc*").permitAll()
+////                .antMatchers("/invalidSession*").anonymous()
+////                .antMatchers("/user/updatePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
+////               // .antMatchers(HttpMethod.POST, "/user/login").permitAll()
+////                .anyRequest().hasAuthority("WRITE_PRIVILEGE")
+////               
+////                .and()
+////            .formLogin()
+////            	.loginPage("/user/login")
+////                .failureUrl("/login?error=true")
+////                .successHandler(myAuthenticationSuccessHandler)
+////                .failureHandler(authenticationFailureHandler)
+////                .authenticationDetailsSource(authenticationDetailsSource)
+////            .permitAll()
+////                .and()
+////            .sessionManagement()
+////                .invalidSessionUrl("/invalidSession.html")
+////                .maximumSessions(1).sessionRegistry(sessionRegistry()).and()
+////                .sessionFixation().none()
+////            .and()
+////            .logout()
+////                .logoutSuccessHandler(myLogoutSuccessHandler)
+////                .invalidateHttpSession(false)
+////                .logoutSuccessUrl("/logout.html?logSucc=true")
+////                .deleteCookies("JSESSIONID")
+////                .permitAll()
+////             .and()
+////                .rememberMe().rememberMeServices(rememberMeServices()).key("theKey");
+//
+//    // @formatter:on
+//    }
 
     // beans
 
