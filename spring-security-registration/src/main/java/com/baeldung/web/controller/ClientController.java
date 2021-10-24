@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -68,6 +69,12 @@ public class ClientController {
 	@GetMapping(path="/{id}")
 	public @ResponseBody ResponseEntity<Optional<Client>> getClientById(@PathVariable(name = "id") Integer id) {
 		return new ResponseEntity<>(clientService.getClient(id),HttpStatus.OK);
+	}
+    
+	// Get single job type by Email
+	@GetMapping(path="")
+	public @ResponseBody ResponseEntity<Optional<Client>> getClientByEmail(@RequestParam String email) {
+		return new ResponseEntity<>(clientService.getClientByEmail(email),HttpStatus.OK);
 	}
 	
 	// Update a Job Type

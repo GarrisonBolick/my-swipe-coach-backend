@@ -41,7 +41,15 @@ public class PotentialMatchService {
 		
 		try {
 			PotentialMatchRepository.save(pm);
-			return "saved";
+			if(PotentialMatchRepository.checkMatch(pm.getCoachId(),pm.getClientId()).get(0)==1&&
+					PotentialMatchRepository.checkMatch(pm.getCoachId(),pm.getClientId()).get(1)==1	) {
+				return "Matched";
+			}
+			else {
+				return "No Match";
+			}
+			
+			
 		} catch(Exception e) {
 			return "failed";
 		}

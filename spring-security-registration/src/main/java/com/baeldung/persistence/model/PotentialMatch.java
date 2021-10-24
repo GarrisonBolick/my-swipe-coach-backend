@@ -54,7 +54,100 @@ public PotentialMatch(){
     @Column(name="ClientSwiped")
     private Integer ClientSwiped; 
     @Column(name="CoachSwiped")
-    private Integer CoachSwiped; 
+    private Integer CoachSwiped;
+	public Integer getPotentialMatchesAutoId() {
+		return PotentialMatchesAutoId;
+	}
+
+
+
+
+
+
+
+	public void setPotentialMatchesAutoId(Integer potentialMatchesAutoId) {
+		PotentialMatchesAutoId = potentialMatchesAutoId;
+	}
+
+
+
+
+
+
+
+	public Integer getClientId() {
+		return ClientId;
+	}
+
+
+
+
+
+
+
+	public void setClientId(Integer clientId) {
+		ClientId = clientId;
+	}
+
+
+
+
+
+
+
+	public Integer getCoachId() {
+		return CoachId;
+	}
+
+
+
+
+
+
+
+	public void setCoachId(Integer coachId) {
+		CoachId = coachId;
+	}
+
+
+
+
+
+
+
+	public Integer getClientSwiped() {
+		return ClientSwiped;
+	}
+
+
+
+
+
+
+
+	public void setClientSwiped(Integer clientSwiped) {
+		ClientSwiped = clientSwiped;
+	}
+
+
+
+
+
+
+
+	public Integer getCoachSwiped() {
+		return CoachSwiped;
+	}
+
+
+
+
+
+
+
+	public void setCoachSwiped(Integer coachSwiped) {
+		CoachSwiped = coachSwiped;
+	} 
  
 
 

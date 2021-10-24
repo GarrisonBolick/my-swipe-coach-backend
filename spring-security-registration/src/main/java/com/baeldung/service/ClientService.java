@@ -65,8 +65,8 @@ public class ClientService {
      
     
       
-      public String createEmptyClient(Long userId){
-    	  Client client = new Client(null,null,null,null,null,null,null,null,null, userId);
+      public String createEmptyClient(Long userId, String email){
+    	  Client client = new Client(null,null,null,null,null,null,email,null,null, userId);
     		try {
     			clientRepository.save(client);
     			return "saved";

@@ -33,9 +33,15 @@ public interface PotentialMatchRepository extends CrudRepository<PotentialMatch,
  public ArrayList<Integer> getAllPotentialClientMatch(@Param("id") Integer id);
  
  @Query(value ="Select ClientId from potential_matches C\r\n"
-	 		+ "Where CoachSwiped =0 and ClientSwiped !=-1 ClientId = :id\r\n", nativeQuery = true)
+	 		+ "Where CoachSwiped =0 and ClientSwiped == 1 ClientId = :id\r\n", nativeQuery = true)
 	 public List<Integer> getAllPotentialCoachMatch(@Param("id") Integer id);
-	 
-	 
+ 
+ @Query(value ="Select coachSwiped,clientSwiped from potential_matches C\r\n"
+	 		+ "Where CoachId =:coachId and ClientId=:clientId\r\n", nativeQuery = true)
+	 public List<Integer> checkMatch(@Param("coachId") Integer coachId,@Param("clientId") Integer clientId);
+ 
+ @Query(value ="Select clientSwiped from potential_matches C\r\n"
+	 		+ "Where CoachId =:coachId and ClientId=:clientId\r\n", nativeQuery = true)
+	 public List<Integer> getMatchedClient(@Param("coachId") Integer coachId,@Param("clientId") Integer clientId);
  
 }

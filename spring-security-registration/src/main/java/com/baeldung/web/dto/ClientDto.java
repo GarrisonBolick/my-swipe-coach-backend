@@ -6,6 +6,7 @@ import com.baeldung.persistence.model.Client;
 
 public class ClientDto {
 	
+	public Integer id;
 	public String token;
 	public String firstName;
 	public String lastName;
@@ -13,9 +14,10 @@ public class ClientDto {
 	public String email;
 	public String contactNumber;
 	
-	public ClientDto(String token, String firstName, String lastName, Date dateOfBirth, String email,
+	public ClientDto(Integer id, String token, String firstName, String lastName, Date dateOfBirth, String email,
 			String contactNumber) {
 		super();
+		this.id = id;
 		this.token = token;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -25,6 +27,7 @@ public class ClientDto {
 	}
 	
 	public ClientDto(Client client) {
+		this.id = client.getClientAutoId();
 		this.firstName = client.getFirstName();
 		this.lastName = client.getLastName();
 		this.dateOfBirth = client.getDateOfBirth();
@@ -32,6 +35,12 @@ public class ClientDto {
 		this.contactNumber = client.getContactNumber();
 	}
 	public ClientDto() {}
+	public Integer getId() {
+		return this.id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public String getToken() {
 		return token;
 	}

@@ -84,7 +84,7 @@ public class RegistrationRestController {
         userService.addUserLocation(registered, getClientIP(request));
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
       
-        clientService.createEmptyClient(registered.getId());
+        clientService.createEmptyClient(registered.getId(), registered.getEmail());
         
         return new ResponseEntity<>(userService.getVerificationTokenByUser(registered).getToken(), HttpStatus.OK);
     }
@@ -107,9 +107,9 @@ public class RegistrationRestController {
 		
 		if(user.isPresent() && passwordEncoder.matches(loginInfo.password, user.get().getPassword())) {
 			Optional<Client> userClientProfile = clientService.getClientByUserId(user.get().getId());
-			if (userClientProfile.isPresent()) {
+			if (userClientProfile.isPresent()&&user.get().isEnabled()==true) {
 				ClientDto clientDto = new ClientDto(userClientProfile.get());
-				clientDto.setToken(userService.getVerificationTokenByUser(user.get()).getToken());
+				
 				
 				List<String> loggedUsers = activeUserStore.getUsers();
 				loggedUsers.add(clientDto.getEmail());
