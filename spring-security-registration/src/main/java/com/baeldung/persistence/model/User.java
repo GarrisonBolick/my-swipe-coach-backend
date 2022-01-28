@@ -38,6 +38,8 @@ public class User {
     private boolean isUsing2FA;
 
     private String secret;
+    
+    private String userType;
 
     //
 
@@ -164,5 +166,13 @@ public class User {
                 .append("]");
         return builder.toString();
     }
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
 
 }

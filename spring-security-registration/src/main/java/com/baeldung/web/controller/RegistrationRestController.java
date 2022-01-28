@@ -1,6 +1,7 @@
 package com.baeldung.web.controller;
 
 import com.baeldung.persistence.model.Client;
+import com.baeldung.persistence.model.Coach;
 import com.baeldung.persistence.model.User;
 import com.baeldung.persistence.model.VerificationToken;
 import com.baeldung.registration.OnRegistrationCompleteEvent;
@@ -8,8 +9,10 @@ import com.baeldung.security.ActiveUserStore;
 import com.baeldung.security.ISecurityUserService;
 import com.baeldung.security.LoggedUser;
 import com.baeldung.service.ClientService;
+import com.baeldung.service.CoachService;
 import com.baeldung.service.IUserService;
 import com.baeldung.web.dto.ClientDto;
+import com.baeldung.web.dto.CoachDto;
 import com.baeldung.web.dto.LoginInfoDto;
 import com.baeldung.web.dto.PasswordDto;
 import com.baeldung.web.dto.UserDto;
@@ -49,6 +52,8 @@ public class RegistrationRestController {
    
     @Autowired
     private ClientService clientService;
+    @Autowired
+    private CoachService coachService;
     @Autowired
     private PasswordEncoder passwordEncoder;
     
@@ -105,17 +110,38 @@ public class RegistrationRestController {
 	
 		Optional<User> user = Optional.of(userService.findUserByEmail(loginInfo.email));
 		
+		
 		if(user.isPresent() && passwordEncoder.matches(loginInfo.password, user.get().getPassword())) {
-			Optional<Client> userClientProfile = clientService.getClientByUserId(user.get().getId());
-			if (userClientProfile.isPresent()&&user.get().isEnabled()==true) {
-				ClientDto clientDto = new ClientDto(userClientProfile.get());
+			if(user.get().getUserType() =="Client") {
+				Optional<Client> userClientProfile = clientService.getClientByUserId(user.get().getId());
+				if (userClientProfile.isPresent()&&user.get().isEnabled()==true) {
+					ClientDto clientDto = new ClientDto(userClientProfile.get());
+					
+					
+					List<String> loggedUsers = activeUserStore.getUsers();
+					loggedUsers.add(clientDto.getEmail());
+					activeUserStore.users = loggedUsers;
+					return new ResponseEntity<>(clientDto, HttpStatus.OK);
+				}
 				
 				
-				List<String> loggedUsers = activeUserStore.getUsers();
-				loggedUsers.add(clientDto.getEmail());
-				activeUserStore.users = loggedUsers;
-				return new ResponseEntity<>(clientDto, HttpStatus.OK);
 			}
+			else if(user.get().getUserType() =="Coach") {
+				Optional<Coach> userCoachProfile = coachService.getCoachByUserId(user.get().getId());
+				if (userCoachProfile.isPresent()&&user.get().isEnabled()==true) {
+					CoachDto coachDto = new CoachDto(userCoachProfile.get());
+					
+					
+					List<String> loggedUsers = activeUserStore.getUsers();
+					loggedUsers.add(coachDto.getEmail());
+					activeUserStore.users = loggedUsers;
+					return new ResponseEntity<>(coachDto, HttpStatus.OK);
+				}
+				
+				
+			}
+			
+			
 		}
 		
 		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);

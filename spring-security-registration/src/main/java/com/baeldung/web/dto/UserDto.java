@@ -23,6 +23,11 @@ public class UserDto {
     @NotNull
     @Size(min = 1)
     private String matchingPassword;
+    
+    @NotNull
+    @Size(min = 1)
+    private String userType;
+
 
     @ValidEmail
     @NotNull
@@ -104,5 +109,15 @@ public class UserDto {
                 .append(role).append("]");
         return builder.toString();
     }
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
+	
 
 }

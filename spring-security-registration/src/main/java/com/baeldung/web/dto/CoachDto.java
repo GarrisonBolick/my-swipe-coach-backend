@@ -3,6 +3,7 @@ package com.baeldung.web.dto;
 import java.util.Date;
 
 import com.baeldung.persistence.model.Client;
+import com.baeldung.persistence.model.Coach;
 
 public class CoachDto {
 	
@@ -26,13 +27,13 @@ public class CoachDto {
 		this.contactNumber = contactNumber;
 	}
 	
-	public CoachDto(Client client) {
-		this.id = client.getClientAutoId();
-		this.firstName = client.getFirstName();
-		this.lastName = client.getLastName();
-		this.dateOfBirth = client.getDateOfBirth();
-		this.email = client.getEmail();
-		this.contactNumber = client.getContactNumber();
+	public CoachDto(Coach coach) {
+		this.id = coach.getCoachAutoId();
+		this.firstName = coach.getFirstName();
+		this.lastName = coach.getLastName();
+		this.dateOfBirth = coach.getDateOfBirth();
+		this.email = coach.getEmail();
+		this.contactNumber = coach.getContactNumber();
 	}
 	public CoachDto() {}
 	public Integer getId() {

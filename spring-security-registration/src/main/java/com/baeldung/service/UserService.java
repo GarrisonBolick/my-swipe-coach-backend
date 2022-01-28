@@ -94,6 +94,7 @@ public class UserService implements IUserService {
         user.setEmail(accountDto.getEmail());
         user.setUsing2FA(accountDto.isUsing2FA());
         user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
+        user.setUserType(accountDto.getUserType());
         return userRepository.save(user);
     }
 
