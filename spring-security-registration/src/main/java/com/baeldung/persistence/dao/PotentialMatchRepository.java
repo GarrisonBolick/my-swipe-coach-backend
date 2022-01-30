@@ -28,20 +28,20 @@ public interface PotentialMatchRepository extends CrudRepository<PotentialMatch,
 	
  //@Query(value= "Select * from client", nativeQuery=true)
 // public List<Client> getAll();
- @Query(value ="Select clientId from potential_matches C\r\n"
- 		+ "Where ClientSwiped =0 and CoachSwiped !=-1 and ClientId = :id\r\n", nativeQuery = true)
+ @Query(value ="Select client_id from potential_match C\r\n"
+ 		+ "Where client_swiped =0 and coach_swiped !=-1 and client_id = :id\r\n", nativeQuery = true)
  public ArrayList<Integer> getAllPotentialClientMatch(@Param("id") Integer id);
  
- @Query(value ="Select ClientId from potential_matches C\r\n"
-	 		+ "Where CoachSwiped =0 and ClientSwiped == 1 ClientId = :id\r\n", nativeQuery = true)
+ @Query(value ="Select client_id from potential_match C\r\n"
+	 		+ "Where coach_swiped =0 and client_swiped == 1 client_id = :id\r\n", nativeQuery = true)
 	 public List<Integer> getAllPotentialCoachMatch(@Param("id") Integer id);
  
- @Query(value ="Select coachSwiped,clientSwiped from potential_matches C\r\n"
-	 		+ "Where CoachId =:coachId and ClientId=:clientId\r\n", nativeQuery = true)
-	 public List<Integer> checkMatch(@Param("coachId") Integer coachId,@Param("clientId") Integer clientId);
+ @Query(value ="Select coach_swiped,client_swiped from potential_match C\r\n"
+	 		+ "Where coach_id =:coach_id and client_id=:client_id\r\n", nativeQuery = true)
+	 public List<Integer> checkMatch(@Param("coach_id") Integer coach_id,@Param("client_id") Integer client_id);
  
- @Query(value ="Select clientSwiped from potential_matches C\r\n"
-	 		+ "Where CoachId =:coachId and ClientId=:clientId\r\n", nativeQuery = true)
-	 public List<Integer> getMatchedClient(@Param("coachId") Integer coachId,@Param("clientId") Integer clientId);
+ @Query(value ="Select client_swiped from potential_match C\r\n"
+	 		+ "Where coach_id =:coach_id and client_id=:client_id\r\n", nativeQuery = true)
+	 public List<Integer> getMatchedClient(@Param("coach_id") Integer coach_id,@Param("client_id") Integer client_id);
  
 }

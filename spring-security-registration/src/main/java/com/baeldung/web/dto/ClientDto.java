@@ -13,9 +13,10 @@ public class ClientDto {
 	public Date dateOfBirth;
 	public String email;
 	public String contactNumber;
+	public String userType;
 	
 	public ClientDto(Integer id, String token, String firstName, String lastName, Date dateOfBirth, String email,
-			String contactNumber) {
+			String contactNumber, String userType) {
 		super();
 		this.id = id;
 		this.token = token;
@@ -24,6 +25,7 @@ public class ClientDto {
 		this.dateOfBirth = dateOfBirth;
 		this.email = email;
 		this.contactNumber = contactNumber;
+		this.userType = userType;
 	}
 	
 	public ClientDto(Client client) {
@@ -77,7 +79,12 @@ public class ClientDto {
 	public void setContactNumber(String contactNumber) {
 		this.contactNumber = contactNumber;
 	}
-	
+	public String getUserType() {
+		return userType;
+	}
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
 	
 
 }

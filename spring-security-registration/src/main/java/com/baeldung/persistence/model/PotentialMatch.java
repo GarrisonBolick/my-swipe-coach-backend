@@ -51,9 +51,9 @@ public PotentialMatch(){
     private Integer ClientId; 
     @Column(name="CoachId")
     private Integer CoachId;
-    @Column(name="ClientSwiped")
+    @Column(name="clientSwiped")
     private Integer ClientSwiped; 
-    @Column(name="CoachSwiped")
+    @Column(name="coachSwiped")
     private Integer CoachSwiped;
 	public Integer getPotentialMatchesAutoId() {
 		return PotentialMatchesAutoId;

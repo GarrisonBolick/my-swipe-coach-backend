@@ -2,6 +2,7 @@ package com.baeldung.web.controller;
 
 import com.baeldung.persistence.model.Client;
 import com.baeldung.persistence.model.Coach;
+import com.baeldung.persistence.model.PotentialMatch;
 import com.baeldung.persistence.model.User;
 import com.baeldung.persistence.model.VerificationToken;
 import com.baeldung.registration.OnRegistrationCompleteEvent;
@@ -11,6 +12,7 @@ import com.baeldung.security.LoggedUser;
 import com.baeldung.service.ClientService;
 import com.baeldung.service.CoachService;
 import com.baeldung.service.IUserService;
+import com.baeldung.service.PotentialMatchService;
 import com.baeldung.web.dto.ClientDto;
 import com.baeldung.web.dto.CoachDto;
 import com.baeldung.web.dto.LoginInfoDto;
@@ -55,6 +57,8 @@ public class RegistrationRestController {
     @Autowired
     private CoachService coachService;
     @Autowired
+    private PotentialMatchService potentialMatchService;
+    @Autowired
     private PasswordEncoder passwordEncoder;
     
     @Autowired
@@ -86,10 +90,28 @@ public class RegistrationRestController {
         LOGGER.debug("Registering user account with information: {}", accountDto);
         
         final User registered = userService.registerNewUserAccount(accountDto);
-        userService.addUserLocation(registered, getClientIP(request));
+       // userService.addUserLocation(registered, getClientIP(request));
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
-      
+      if(registered.getUserType().equals("Client")) {
         clientService.createEmptyClient(registered.getId(), registered.getEmail());
+        
+        try {
+        	Iterable<Coach> allCoaches = coachService.getAllCoach();
+        	 for(Coach coach: allCoaches) {
+             	PotentialMatch match = new PotentialMatch(clientService.getClientByUserId(registered.getId()).get().getClientAutoId(),coach.getCoachAutoId(),0,0);
+             	potentialMatchService.updatePotentialMatch(match);
+             }
+        } catch(Exception e) {
+        	
+        }
+        
+       
+      }
+      else if(registered.getUserType().equals("Coach")) {
+    	  coachService.createEmptyCoach(registered.getId(),registered.getEmail());
+      }
+      
+      
         
         return new ResponseEntity<>(userService.getVerificationTokenByUser(registered).getToken(), HttpStatus.OK);
     }
@@ -112,11 +134,11 @@ public class RegistrationRestController {
 		
 		
 		if(user.isPresent() && passwordEncoder.matches(loginInfo.password, user.get().getPassword())) {
-			if(user.get().getUserType() =="Client") {
+			if(user.get().getUserType().equals("Client")) {
 				Optional<Client> userClientProfile = clientService.getClientByUserId(user.get().getId());
 				if (userClientProfile.isPresent()&&user.get().isEnabled()==true) {
 					ClientDto clientDto = new ClientDto(userClientProfile.get());
-					
+					clientDto.setUserType(user.get().getUserType());
 					
 					List<String> loggedUsers = activeUserStore.getUsers();
 					loggedUsers.add(clientDto.getEmail());
@@ -126,11 +148,11 @@ public class RegistrationRestController {
 				
 				
 			}
-			else if(user.get().getUserType() =="Coach") {
+			else if(user.get().getUserType().equals("Coach")) {
 				Optional<Coach> userCoachProfile = coachService.getCoachByUserId(user.get().getId());
 				if (userCoachProfile.isPresent()&&user.get().isEnabled()==true) {
 					CoachDto coachDto = new CoachDto(userCoachProfile.get());
-					
+					coachDto.setUserType(user.get().getUserType());
 					
 					List<String> loggedUsers = activeUserStore.getUsers();
 					loggedUsers.add(coachDto.getEmail());
