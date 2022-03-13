@@ -109,6 +109,16 @@ public class RegistrationRestController {
       }
       else if(registered.getUserType().equals("Coach")) {
     	  coachService.createEmptyCoach(registered.getId(),registered.getEmail());
+          
+          try {
+          	Iterable<Client> allClients = clientService.getAllClient();
+          	 for(Client client: allClients) {
+               	PotentialMatch match = new PotentialMatch(client.getClientAutoId(),coachService.getCoachByUserId(registered.getId()).get().getCoachAutoId(),0,0);
+               	potentialMatchService.updatePotentialMatch(match);
+               }
+          } catch(Exception e) {
+          	
+          }
       }
       
       
